@@ -1,8 +1,5 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
@@ -15,6 +12,10 @@ const tabsContainer = document.querySelector('.operations__tab-container')
 const tabsContent = document.querySelectorAll('.operations__content')
 
 const nav = document.querySelector('.nav')
+
+
+/////////////////////////////////////////////////////////////////////////////////////
+// Modal window
 
 const openModal = function (e) {
   e.preventDefault()
@@ -39,8 +40,9 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-// Button scrolling
 
+/////////////////////////////////////////////////////////////////////////////////////
+// Button scrolling
 
 btnScrollTo.addEventListener('click', function (e) {
   const s1coords = section1.getBoundingClientRect()
@@ -62,7 +64,7 @@ console.log(window.pageXOffset, window.pageYOffset)
 const h1 = document.querySelector('h1')
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////
 // Page navigation
 
 // document.querySelectorAll('.nav__link').forEach(function (el) {
@@ -82,7 +84,7 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 })
 
 
-
+/////////////////////////////////////////////////////////////////////////////////////
 // Tabbed component
 tabsContainer.addEventListener('click', function(e) {
   const clicked = e.target.closest('.operations__tab')
@@ -102,7 +104,7 @@ tabsContainer.addEventListener('click', function(e) {
   document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active')
 })
 
-
+/////////////////////////////////////////////////////////////////////////////////////
 // Menu fade animation
 
 const handleHover = function(e) {
@@ -123,18 +125,49 @@ nav.addEventListener('mouseover', handleHover.bind(0.5))
 
 nav.addEventListener('mouseout', handleHover.bind(1))
 
+/////////////////////////////////////////////////////////////////////////////////////
 // Sticky navigation
-const initialCoords = section1.getBoundingClientRect()
-window.addEventListener('scroll', function () {
-  console.log(window.scrollY)
-  console.log(initialCoords)
+// const initialCoords = section1.getBoundingClientRect()
+// window.addEventListener('scroll', function () {
+//   console.log(window.scrollY)
+//   console.log(initialCoords)
 
-  if(window.scrollY > initialCoords.top) nav.classList.add('sticky')
+//   if(window.scrollY > initialCoords.top) nav.classList.add('sticky')
+//   else nav.classList.remove('sticky')
+// })
+
+// Sticky navigation: Intersection Observer API
+
+// const obsCallback = function(entries, observer) {
+//   entries.forEach(entry => {
+//     console.log(entry)
+//   })
+// }
+
+// const obsOtions = {
+//   root: null,   // entire viewport
+//   threshold: .1
+// }
+
+// const observer = new IntersectionObserver(obsCallback, obsOtions)
+// observer.observe(section1)
+
+const header = document.querySelector('.header')
+const navHeight = nav.getBoundingClientRect().height
+
+const stickyNav = function (entries) {
+  const [entry] = entries // entries[0]
+
+  if(!entry.isIntersecting) nav.classList.add('sticky')
   else nav.classList.remove('sticky')
+}
+
+const headerObserver = new IntersectionObserver(stickyNav, {
+  root: null,
+  threshold: 0,
+  rootMargin: `-${navHeight}px`,
 })
-
-
-
+headerObserver.observe(header)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PRACTICE SECTION ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
